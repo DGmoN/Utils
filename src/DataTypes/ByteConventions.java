@@ -1,5 +1,7 @@
 package DataTypes;
 
+import java.lang.annotation.Documented;
+
 import Formating.Strings;
 
 public class ByteConventions {
@@ -110,6 +112,66 @@ public class ByteConventions {
 			sb.append((bytes[i / Byte.SIZE] << i % Byte.SIZE & 0x80) == 0 ? '0'
 					: '1');
 		return sb.toString();
+	}
+
+	public static byte getMax(byte... a) {
+		byte holder = (byte) 0x00;
+		for (byte s : a) {
+			if (s < 0) {
+				if (s + 254 > holder)
+					holder = s;
+			} else {
+				if (s > holder)
+					holder = s;
+			}
+		}
+
+		return holder;
+	}
+
+	public static byte getMin(byte... a) {
+		byte holder = (byte) 255;
+		for (byte s : a) {
+			if (s < 0) {
+				if (holder < 0) {
+					if (s + 255 < holder + 255) {
+						holder = s;
+					}
+				}
+				if (s + 255 < holder) {
+					holder = s;
+				}
+			} else {
+				if (holder < 0) {
+					if (s < holder + 255) {
+						holder = s;
+					}
+				}
+				if (s < holder) {
+					holder = s;
+				}
+			}
+		}
+
+		return holder;
+	}
+
+	/**
+	 * Not Working YET!
+	 * **/
+	public static byte[] sort(byte... a) {
+		byte[] data = new byte[a.length];
+		byte holderA = getMin(a);
+		int x = 0;
+		data[x++] = holderA;
+		for (byte s : a) {
+			for (byte z : a) {
+
+			}
+
+		}
+
+		return data;
 	}
 
 	public static double compare(byte[] a, byte[] b) {
