@@ -24,8 +24,12 @@ public class EventTracker {
 
 	Thread ActiveToReader;
 
-	private EventTracker(File e) {
-		System.out.println("Starting event tracker---" + e.getName());
+	final Class SRC;
+
+	private EventTracker(File e, Class src) {
+		System.out.println("Starting event tracker---" + e.getName() + "---"
+				+ src.getCanonicalName());
+		SRC = src;
 		Output_File = e;
 		try {
 			e.createNewFile();
@@ -37,12 +41,12 @@ public class EventTracker {
 
 	}
 
-	public static EventTracker init(File output) {
-		return new EventTracker(output);
+	public static EventTracker init(File output, Class src) {
+		return new EventTracker(output, src);
 	}
 
-	public static EventTracker init(String output) {
-		return new EventTracker(new File(output));
+	public static EventTracker init(String output, Class src) {
+		return new EventTracker(new File(output), src);
 	}
 
 	public void Write(Exception e) {
@@ -69,7 +73,8 @@ public class EventTracker {
 	public void Write(String S, int degree) {
 		String OutputTime = new Time(new Date().getTime()).toString();
 		String Outputs;
-		Outputs = "[" + OutputTime + "]" + Types[degree] + " : ";
+		Outputs = "[" + OutputTime + "]" + "[" + SRC.getCanonicalName() + "]"
+				+ Types[degree] + " : ";
 		Outputs += Formating.Strings.space("", stampLenth - Outputs.length(),
 				' ') + S;
 

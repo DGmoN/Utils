@@ -15,21 +15,45 @@ public class Strings {
 		private String[] lines;
 		private int index = 0;
 
-		public LINES(String... lines) {
-			this.lines = lines;
+		public LINES(String... Lines) {
+			if (Lines != null) {
+				this.lines = Lines;
+				return;
+			}
+			this.lines = new String[0];
 		}
 
 		public void add(String... lines) {
-			String[] newArr = new String[this.lines.length + lines.length];
+			String[] newArr;
+			if (this.lines != null)
+				newArr = new String[this.lines.length + lines.length];
+			else
+				newArr = new String[lines.length];
 			int x = 0;
-			for (String s : this.lines) {
-				newArr[x++] = s;
-			}
+			if (this.lines != null)
+				for (String s : this.lines) {
+					newArr[x++] = s;
+				}
 			for (String s : lines) {
 				newArr[x++] = s;
 			}
 
 			this.lines = newArr;
+		}
+
+		public boolean contains(String a) {
+			for (String s : lines) {
+				if (s != null)
+					if (s.equals(a))
+						return true;
+			}
+			return false;
+		}
+
+		public int getSize() {
+			if (lines == null)
+				return 0;
+			return lines.length;
 		}
 
 		public void reset() {
