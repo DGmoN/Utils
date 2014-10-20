@@ -27,14 +27,21 @@ public class EventTracker {
 	final Class SRC;
 
 	private EventTracker(File e, Class src) {
+		long now = System.currentTimeMillis();
 		System.out.println("Starting event tracker---" + e.getName() + "---"
 				+ src.getCanonicalName());
 		SRC = src;
 		Output_File = e;
 		try {
+			if (!new File(Output_File.getParentFile().getPath()).exists()) {
+				new File(Output_File.getParentFile().getPath()).mkdir();
+			}
 			e.createNewFile();
 			Output = new PrintWriter(Output_File);
 			stampLenth = 26;
+			System.out.println("Done with no probelms");
+			Write("Time taken to init: " + (System.currentTimeMillis() - now)
+					+ "ms", 0);
 		} catch (Exception e2) {
 			System.out.println(e2.getMessage());
 		}
@@ -60,7 +67,8 @@ public class EventTracker {
 	public void Write(Object... arr) {
 		String[] ToPrint = new String[arr.length];
 		for (int x = 0; x < arr.length; x++) {
-			ToPrint[x] = arr[x].toString();
+			if (arr[x] != null)
+				ToPrint[x] = arr[x].toString();
 		}
 		String out = "";
 		for (String a : ToPrint) {

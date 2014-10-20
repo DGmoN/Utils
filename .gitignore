@@ -57,3 +57,11 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+Cover.jpg
+Database/config
+Database/Groceries/PnP_Prises.dbs
+*.dbs
+Test.syms
+*.bmp
+TestVid.avi
+P_Y_T_H_O_N.jpg

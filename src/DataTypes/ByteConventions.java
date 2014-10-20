@@ -168,9 +168,7 @@ public class ByteConventions {
 			for (byte z : a) {
 
 			}
-
 		}
-
 		return data;
 	}
 
@@ -231,7 +229,6 @@ public class ByteConventions {
 	}
 
 	public static byte[] byteStringtoByteArr(String a) {
-
 		byte[] ret = new byte[(a.length() / 2) + 1];
 		String temp = "";
 		int val = 0;
@@ -270,7 +267,15 @@ public class ByteConventions {
 			x++;
 		}
 		return 0;
+	}
 
+	public static byte[] getCharStringAsBytes(String s) {
+		byte[] ret = new byte[s.length()];
+		int x = 0;
+		for (char d : s.toCharArray()) {
+			ret[x++] = (byte) d;
+		}
+		return ret;
 	}
 
 	public static String flipByte(String s) {
@@ -283,16 +288,5 @@ public class ByteConventions {
 		ret += s.toCharArray()[x];
 
 		return ret;
-	}
-
-	public static int bytesToInt(byte... bytes) {
-		String[] BYTES = new String[bytes.length];
-		for (int x = 0; x < bytes.length; x++) {
-			BYTES[x] = Strings.remove(byteToHex(bytes[x]), ' ');
-		}
-		String bigWord = Strings.combine("", 0, BYTES);
-
-		return HexConvertions.hexToInt(flipByte(bigWord));
-
 	}
 }

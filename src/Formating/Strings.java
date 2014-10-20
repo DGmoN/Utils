@@ -83,8 +83,7 @@ public class Strings {
 			int x = 0;
 			for (String a : lines) {
 				if (a != null)
-					out[x] = a;
-				System.out.println(a);
+					out[x++] = a;
 
 			}
 
@@ -178,9 +177,10 @@ public class Strings {
 		return out;
 	}
 
-	public static String getTime() {
+	public static String getTime(char separater) {
 		long temp = System.currentTimeMillis();
-		SimpleDateFormat sdf = new SimpleDateFormat("[dd-MMM-yyyy] [HH-mm]");
+		SimpleDateFormat sdf = new SimpleDateFormat("[dd" + separater + "MMM"
+				+ separater + "yyyy] [HH" + separater + "mm]");
 		Date resultdate = new Date(temp);
 		return "" + sdf.format(resultdate);
 	}
