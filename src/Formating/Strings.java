@@ -118,13 +118,16 @@ public class Strings {
 	public static String combine(String separator, int separationLength,
 			String... strings) {
 		String ret = "";
-		for (String s : strings) {
-			ret += s;
-			if (!s.equals(strings[strings.length - 1]))
-				for (int x = 0; x < separationLength; x++) {
-					ret += separator;
+		if (strings != null)
+			for (String s : strings) {
+				if (s != null) {
+					ret += s;
+					if (!s.equals(strings[strings.length - 1]))
+						for (int x = 0; x < separationLength; x++) {
+							ret += separator;
+						}
 				}
-		}
+			}
 		return ret;
 	}
 
