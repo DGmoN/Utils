@@ -73,7 +73,7 @@ public class EventTracker {
 		String out = "";
 		for (String a : ToPrint) {
 			out += a;
-			out += Formating.Strings.space("\n", stampLenth, ' ');
+			out += Formating.Strings.space("\n", stampLenth, "");
 		}
 		Write(out, 0);
 	}
@@ -84,7 +84,7 @@ public class EventTracker {
 		Outputs = "[" + OutputTime + "]" + "[" + SRC.getCanonicalName() + "]"
 				+ Types[degree] + " : ";
 		Outputs += Formating.Strings.space("", stampLenth - Outputs.length(),
-				' ') + S;
+				" ") + S;
 
 		Output.println(Outputs);
 		Output.flush();

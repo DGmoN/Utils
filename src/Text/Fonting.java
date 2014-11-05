@@ -1,5 +1,6 @@
 package Text;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -104,6 +105,8 @@ public abstract class Fonting {
 	public static class Syms {
 		ArrayList<Raster> CharData = new ArrayList<Raster>();
 
+		int charIndex = 0;
+
 		private final int width, height;
 
 		private Syms(int w, int h) {
@@ -115,10 +118,19 @@ public abstract class Fonting {
 			return CharData.get(index).getData();
 		}
 
-		private void registerChar(Raster a) {
-			CharData.add(a);
+		public Rectangle getDimentions() {
+			return new Rectangle(width, height);
 		}
 
+		private void registerChar(Raster a) {
+			CharData.add(a);
+			charIndex++;
+		}
+
+		public int getCharIndex(){
+			return charIndex;
+		}
+		
 		public void addChar(String[] a) {
 			Raster temp = new Raster(width, height);
 			for (String s : a) {
@@ -149,7 +161,7 @@ public abstract class Fonting {
 		try {
 			System.out.println("[FONTING][LOADFONT][LOADING] : " + FileName
 					+ ".syms");
-			SymsFile SS = new SymsFile("Test");
+			SymsFile SS = new SymsFile(FileName+".syms");
 			byteSegement[] CharData = SS.getCharData();
 
 			Syms ret = new Syms(SS.getCharDimentions().width,

@@ -23,7 +23,7 @@ public class AudioStuff {
 	}
 
 	public static AudioInputStream getMicStream(int micId) throws Exception {
-		Mixer mics = getMicMixers(micId);
+		Mixer mics = getMicMixers();
 
 		if (mics != null) {
 			Vector<AudioFormat> Formats = getSuportedFormats(mics);
@@ -53,13 +53,10 @@ public class AudioStuff {
 		return ret;
 	}
 
-	private static Mixer getMicMixers(int id) {
-		int x = 0;
+	private static Mixer getMicMixers() {
+
 		for (Mixer.Info s : AudioSystem.getMixerInfo()) {
-			if (s.getName().contains("Capture")) {
-				x++;
-			}
-			if (x == id)
+			if (s.getName().contains("Primary Sound Capture Driver"))
 				return AudioSystem.getMixer(s);
 		}
 		return null;

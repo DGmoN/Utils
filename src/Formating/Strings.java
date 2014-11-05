@@ -110,7 +110,7 @@ public class Strings {
 		for (Object s : strings) {
 			temp = s.toString();
 			ret += temp;
-			ret = space(ret, TSize - temp.length(), sep);
+			ret = space(ret, TSize - temp.length(), sep + "");
 		}
 		return ret;
 	}
@@ -131,11 +131,23 @@ public class Strings {
 		return ret;
 	}
 
-	public static String space(String src, int spaceCount, char dd) {
+	public static String space(String src, int spaceCount, String dd) {
 		for (int x = 0; x < spaceCount; x++) {
 			src += dd;
 		}
 		return src;
+	}
+
+	public static String insertEvery(int interval, String separation, String src) {
+		String ret = "";
+		for (int x = 0; x < src.length(); x++) {
+			if (x!= src.length())
+			if (x % interval == 0)
+				ret += separation;
+
+			ret += src.charAt(x);
+		}
+		return ret;
 	}
 
 	public static String genSeparator(int len, char txt) {
