@@ -2,6 +2,7 @@ package Text;
 
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -15,6 +16,8 @@ import Formating.Strings.LINES;
 
 public abstract class Fonting {
 
+	private static final String DefultFontDir = "Fonts/";
+	
 	private static class Raster {
 		ByteBuffer bb;
 
@@ -23,6 +26,8 @@ public abstract class Fonting {
 		final byte CharID;
 
 		final int width, height;
+
+		byte identifire;
 
 		int y = 0;
 		int perLine;
@@ -95,8 +100,6 @@ public abstract class Fonting {
 		}
 
 		public Raster put(byte[] value) {
-			System.out.println("[FONTING][RASTER][INPUT] : "
-					+ ByteConventions.toBinaryString(value));
 			bb.put(value);
 			return this;
 		}
@@ -114,6 +117,10 @@ public abstract class Fonting {
 			height = h;
 		}
 
+		public byte getSymbolForIndex(int x) {
+			return CharData.get(x).identifire;
+		}
+
 		public byte[] getCharData(int index) {
 			return CharData.get(index).getData();
 		}
@@ -123,19 +130,26 @@ public abstract class Fonting {
 		}
 
 		private void registerChar(Raster a) {
+
+			System.out.println("[SYSMS][REGESTER][RASTER_SYMBOL] : "
+					+ a.identifire);
+			System.out.println("[SYSMS][REGESTER][RASTER_DATA] : "
+					+ ByteConventions.toBinaryString(a.getData()));
+
 			CharData.add(a);
 			charIndex++;
 		}
 
-		public int getCharIndex(){
+		public int getCharIndex() {
 			return charIndex;
 		}
-		
-		public void addChar(String[] a) {
+
+		public void addChar(String[] a, byte SymbolChar) {
 			Raster temp = new Raster(width, height);
 			for (String s : a) {
 				temp.put(s);
 			}
+			temp.identifire = SymbolChar;
 			registerChar(temp);
 		}
 
@@ -145,34 +159,50 @@ public abstract class Fonting {
 					new byte[] { 0x00, (byte) CharData.size(), 0x00,
 							(byte) width, 0x00, (byte) height });
 			for (Raster a : CharData) {
+				temp.WriteToFile((byte) 0x00);
+				temp.WriteToFile(a.identifire);
 				byte[] WriteData = a.getData();
 				temp.WriteToFile(WriteData);
 			}
 			System.out.println("[FONTING][SYMS][SAVING] : FINISH");
 		}
-
 	}
 
 	public Fonting() {
 
 	}
 
+	private static boolean retry = false;
+	
 	public static Syms LoadFont(String FileName) {
+		File temp1 = new File(FileName);
 		try {
 			System.out.println("[FONTING][LOADFONT][LOADING] : " + FileName
 					+ ".syms");
-			SymsFile SS = new SymsFile(FileName+".syms");
+			SymsFile SS = new SymsFile(FileName + ".syms");
 			byteSegement[] CharData = SS.getCharData();
-
 			Syms ret = new Syms(SS.getCharDimentions().width,
 					SS.getCharDimentions().height);
 			for (byteSegement a : CharData) {
-				ret.registerChar(new Raster(SS.getCharDimentions().width, SS
-						.getCharDimentions().height).put(a.getValue()));
+				byte[] data = a.getValue();
+				Raster temp = new Raster(SS.getCharDimentions().width,
+						SS.getCharDimentions().height);
+				temp.identifire = data[1];
+				byte[] actualData = buildStructureDate(data);
+				temp.put(buildStructureDate(data));
+				ret.registerChar(temp);
 			}
 			System.out.println("[FONTING][LOADFONT][LOADED] : " + FileName
 					+ ".syms");
 			return ret;
+		} catch (FileNotFoundException ee){
+			System.out.println("[FONTING][LOADFONT][LOADING_FNF] : "
+					+ FileName);
+			if(!retry){
+			System.out.println("[FONTING][LOADFONT][LOADING_FNF] : Looking in defult dir.");
+			LoadFont(DefultFontDir +temp1.getName());
+			retry = true;
+			}
 		} catch (Exception e) {
 			System.out.println("[FONTING][LOADFONT][LOADING_FAILURE] : "
 					+ FileName);
@@ -180,6 +210,15 @@ public abstract class Fonting {
 		}
 
 		return null;
+	}
+
+	private static byte[] buildStructureDate(byte[] src) {
+		byte[] ret = new byte[src.length - 2];
+		for (int x = 0; x < src.length; x++) {
+			if (x > 2)
+				ret[x - 2] = src[x];
+		}
+		return ret;
 	}
 
 	public static String[] getCreatedFonts(String dir) {
@@ -203,13 +242,18 @@ public abstract class Fonting {
 		return null;
 	}
 
-	public static Syms createNewFont(int width, int height, String[][] data) {
+	public static Syms createNewFont(int width, int height, String[][] data,
+			byte[] bytesums) {
 		if (width % 8 == 0 && height / 8 >= 1) {
-			Syms ret = new Syms(width, height);
-			for (String[] Char : data) {
-				ret.addChar(Char);
+			if (bytesums.length == data.length) {
+				int x = 0;
+				Syms ret = new Syms(width, height);
+				for (String[] Char : data) {
+					ret.addChar(Char, bytesums[x]);
+					x++;
+				}
+				return ret;
 			}
-			return ret;
 		}
 		System.err.println("Both width and height must be devidable by 8.");
 		return null;

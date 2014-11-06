@@ -32,6 +32,30 @@ public class ByteConventions {
 			updateValue();
 		}
 
+		public byte[] getValueFromOffset(int x){
+			byte[] ret = new byte[size-x];
+			int q = 0;
+			for(int s = 0; s<size;s++){
+				if(s>x){
+					ret[q++] = Value[q];
+				}
+			}
+			return ret;
+		}
+		
+		public static byte binStringToByte(String a) {
+			System.out.println("[FONTING][BINSTR>BYTE][INPUT] : " + a);
+			int s = 0;
+			int x = a.length() - 1;
+			for (char z : a.toCharArray()) {
+				if (z == '1')
+					s += Math.pow(2, x);
+				x--;
+			}
+			System.out.println("[FONTING][BINSTR>BYTE][RESULT] : " + s);
+			return (byte) s;
+		}
+		
 		public void invert() {
 			byte[] ret = new byte[Value.length];
 			int a = 0;

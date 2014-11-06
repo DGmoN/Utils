@@ -33,27 +33,25 @@ public class SymsFile extends CustomFiles {
 	}
 
 	private void buildCharData() {
+		int charDataLenth = CharDimX.toInt() / 8 * CharDimY.toInt();
 		System.out.println("[SYMSFILE][BUILDINGCHARDATA] : START");
 		charData = new byteSegement[charIndex.toInt()];
 		int x = 0;
 		while (x < charIndex.toInt()) {
 			try {
-				System.out
-						.println("[SYMSFILE][BUILDINGCHARDATA][ATTEMPTING] : "
-								+ x);
-				charData[x] = new byteSegement(6 + ((CharDimX.toInt() / 8)
-						* CharDimY.toInt() * x),
-						((CharDimX.toInt() / 8) * CharDimY.toInt()), FileData);
-				System.out
-						.println("[SYMSFILE][BUILDINGCHARDATA][ADDED] : " + x);
+				charData[x] = new byteSegement(6 + (charDataLenth * x)+(x*2),
+						charDataLenth+2, FileData);
 				x++;
-
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				break;
 			}
+			System.out
+			.println("[SYMSFILE][BUILDINGCHARDATA][PROSSESING] : "
+					+ (((float)x/this.length())*1000)+"%");
 		}
-		System.out.println("[SYMSFILE][BUILDINGCHARDATA] : END");
+		System.out.println("[SYMSFILE][BUILDINGCHARDATA] : DONE");
 	}
 
 }
