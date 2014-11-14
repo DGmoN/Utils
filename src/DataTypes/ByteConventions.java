@@ -199,12 +199,9 @@ public class ByteConventions {
 	public static double compare(byte[] a, byte[] b) {
 		int x = 0, mathch = 0;
 		for (byte s : a) {
-			for (byte d : b) {
-				if (d == s) {
-					mathch++;
-					break;
-				}
-			}
+			if(a[x] == b[x])
+				mathch++;
+			x++;
 		}
 		return mathch / b.length;
 	}

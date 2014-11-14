@@ -10,7 +10,7 @@ import Formating.Misc;
  * The Method object is registered and then recalled to the object
  * */
 
-public abstract class QuickLinks {
+public abstract class QuickLinks{
 
 	/** START REGISTERY **/
 	private static QuickLinks QUICKENDS;
@@ -32,7 +32,7 @@ public abstract class QuickLinks {
 		return true;
 	}
 
-	public static void invoke(String trgt, Object... args) {
+	public static void invoke(String trgt, Object... args) { // FORMAT cashname:methodname
 		String CashName = trgt.substring(0, trgt.indexOf(":")), targerMethod = trgt
 				.substring(trgt.indexOf(":") + 1, trgt.length());
 

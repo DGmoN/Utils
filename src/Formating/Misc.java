@@ -1,29 +1,43 @@
 package Formating;
 
-public class Misc {
+import javax.xml.bind.util.ValidationEventCollector;
+
+public abstract class Misc {
 
 	public static class segment<Val> {
 
-		private Val[] Range;
 
-		private final int ofset, size;
+		
+		int index = 0;
 
 		Val[] Value;
 
-		public segment(int ofset, int size, Val... range) {
-			this.ofset = ofset;
-			this.size = size;
-			this.Range = range;
-			updateValue();
-		}
+		public segment(Val[] range) {
 
-		private void updateValue() {
-			Value = (Val[]) new Object[size];
-			for (int x = 0, y = 0; x < Range.length; x++) {
-				if (x > ofset && x < ofset + size) {
-					Value[y++] = Range[x];
-				}
+			this.Value = range;
+		}
+		
+		public void reset(){
+			index = 0;
+		}
+		
+		public Object[] getRemaining(){
+			int SIZE = Value.length-index;
+			int x = index;
+			Object[] ret = new Object[SIZE];
+			while((x-index)<SIZE){
+				ret[x-index] = Value[x];
+				x++;
 			}
+			return ret;
+		}
+		
+		public int getLenth(){
+			return Value.length;
+		}
+		
+		public Val getNext(){
+			return Value[index++];
 		}
 
 		public Val[] getValue() {

@@ -11,9 +11,29 @@ public class Strings {
 			't', 'u', 'v', 'w', 'x', 'y', 'z' }, NUMBERS = { '0', '1', '2',
 			'3', '4', '5', '6', '7', '8', '9' };
 
+	public static boolean isAlfabetical(char x) {
+		for (char s : ALFABETICAL) {
+			if (s == x)
+				return true;
+		}
+		return false;
+	}
+
+	public static boolean isSymbol(char x) {
+		return !(isAlfabetical(x) && isNumerical(x));
+	}
+
 	public static class LINES {
 		private String[] lines;
 		private int index = 0;
+
+		public String getAllAsSingle() {
+			String ret = "";
+			for (String l : lines) {
+				ret += l + "\n";
+			}
+			return ret;
+		}
 
 		public LINES(String... Lines) {
 			if (Lines != null) {
@@ -93,7 +113,6 @@ public class Strings {
 	}
 
 	public static boolean isNumerical(char a) {
-		System.out.println(a);
 		for (char s : NUMBERS) {
 			if (a == s) {
 				return true;
@@ -102,19 +121,64 @@ public class Strings {
 		return false;
 	}
 
-	// The size indicates the length of a Item in the array
+	// simply gets the amount of chars between 2 chars
+	public static int charCountBetween(char a, char b, String src) {
+		boolean counting = false;
+		if (a == ' ')
+			counting = true;
 
+		int ret = 0;
+		for (char s : src.toCharArray()) {
+			if (s == b)
+				break;
+			if (counting)
+				ret++;
+			if (s == a)
+				counting = true;
+		}
+
+		return ret;
+	}
+
+	// gets the substring between 2 chars
+	public static String extractBetween(char a, char b, String src,
+			int ignoreFirst) {
+		String ret = "";
+		boolean counting = false;
+		if(a==' ')
+			counting = true;
+		int count = 0;
+		for (char s : src.toCharArray()) {
+			if (s == b&&counting)
+				break;
+			if (counting){
+				if(s!=' ')
+				ret += s;
+
+			}
+			if (s == a) {
+				if (count == ignoreFirst)
+					counting = true;
+				else
+					count++;
+			}
+		}
+		return ret;
+	}
+
+	// The size indicates the length of a Item in the array
 	public static String format(int TSize, char sep, Object... strings) {
 		String ret = "";
 		String temp;
 		for (Object s : strings) {
 			temp = s.toString();
 			ret += temp;
-			ret = space(ret, TSize - temp.length(), sep + "");
+			ret = space(ret, TSize - temp.length(), sep + "", false);
 		}
 		return ret;
 	}
 
+	// combines strings with the separator
 	public static String combine(String separator, int separationLength,
 			String... strings) {
 		String ret = "";
@@ -131,25 +195,34 @@ public class Strings {
 		return ret;
 	}
 
-	public static String space(String src, int spaceCount, String dd) {
+	// inserts a space on iter the left or the right, depending on justify
+	public static String space(String src, int spaceCount, String dd,
+			boolean justify) {
+		String ret = "";
+		if (!justify)
+			ret = src;
 		for (int x = 0; x < spaceCount; x++) {
-			src += dd;
+			ret += dd;
 		}
-		return src;
+		if (justify)
+			ret += src;
+		return ret;
 	}
 
+	// inserts a substring every interval
 	public static String insertEvery(int interval, String separation, String src) {
 		String ret = "";
 		for (int x = 0; x < src.length(); x++) {
-			if (x!= src.length())
-			if (x % interval == 0)
-				ret += separation;
+			if (x != src.length())
+				if (x % interval == 0)
+					ret += separation;
 
 			ret += src.charAt(x);
 		}
 		return ret;
 	}
 
+	// creates a length of a specific char
 	public static String genSeparator(int len, char txt) {
 		String ret = "";
 		for (int x = 0; x < len; x++) {
@@ -158,6 +231,7 @@ public class Strings {
 		return ret;
 	}
 
+	// removes the char from the string
 	public static String remove(String trgt, char... cs) {
 		String ret = "";
 
@@ -171,6 +245,7 @@ public class Strings {
 		return ret;
 	}
 
+	// returns the length of the longest string
 	public static int getMaxLength(String... ar) {
 		int x = 0;
 		for (String a : ar) {
@@ -182,6 +257,7 @@ public class Strings {
 		return x;
 	}
 
+	// builds a string array of objects
 	public static String[] objectArrToStrings(Object... a) {
 		String[] out = new String[a.length];
 		int x = 0;
@@ -192,6 +268,7 @@ public class Strings {
 		return out;
 	}
 
+	// returns a time stamp
 	public static String getTime(char separater) {
 		long temp = System.currentTimeMillis();
 		SimpleDateFormat sdf = new SimpleDateFormat("[dd" + separater + "MMM"
