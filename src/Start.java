@@ -1,12 +1,13 @@
 import io.audio.AudioStuff;
 
-import java.io.IOException;
+import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.LineUnavailableException;
 
+import web.HtmlSection;
+import web.HtmlUtils;
+import web.PadHtml;
 import DataTypes.ByteConventions;
-import Formating.Strings;
 import Text.Fonting;
 import Text.Fonting.Syms;
 
@@ -17,10 +18,19 @@ public class Start extends Thread {
 	 * "00000000", "00000000"}
 	 */
 
-	public static void main(String args[]) throws IOException,
-			LineUnavailableException {
+	public static void main(String args[]) {
+		File test = new File("output.html");
+		testPageDownload(test);
+		testPagePadding(test);
+		HtmlSection.generateFromFile(test);
+	}
 
-		testFontLoading();
+	private static void testPagePadding(File result) {
+		PadHtml.padHtml(result);
+	}
+	
+	private static void testPageDownload(File result) {
+		HtmlUtils.DownloadHtml("http://google.co.za", result);
 	}
 
 	private static void testFontSaving() {
@@ -235,7 +245,7 @@ public class Start extends Thread {
 	private static void testFontLoading() {
 
 		Syms test = Fonting.LoadFont("Basic");
-
+		
 	}
 
 	private static void testAudio() {

@@ -1,8 +1,10 @@
 package Formating;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Scanner;
 
 public class Strings {
 
@@ -26,6 +28,16 @@ public class Strings {
 	public static class LINES {
 		private String[] lines;
 		private int index = 0;
+
+		public void loadFromFile(File ss) {
+			try {
+				Scanner s = new Scanner(ss);
+				while(true){
+					add(s.nextLine());
+				}
+			} catch (Exception e) {
+			}
+		}
 
 		public String getAllAsSingle() {
 			String ret = "";
@@ -95,7 +107,7 @@ public class Strings {
 					return lines[index++] + "\n";
 				}
 			} else
-				return "EOL";
+				return "EOF";
 		}
 
 		public String[] getAllLines() {
@@ -145,15 +157,15 @@ public class Strings {
 			int ignoreFirst) {
 		String ret = "";
 		boolean counting = false;
-		if(a==' ')
+		if (a == ' ')
 			counting = true;
 		int count = 0;
 		for (char s : src.toCharArray()) {
-			if (s == b&&counting)
+			if (s == b && counting)
 				break;
-			if (counting){
-				if(s!=' ')
-				ret += s;
+			if (counting) {
+				if (s != ' ')
+					ret += s;
 
 			}
 			if (s == a) {

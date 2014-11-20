@@ -26,22 +26,30 @@ public class EventTracker {
 
 	final Class SRC;
 
+	boolean functional;
+
 	private EventTracker(File e, Class src) {
+		functional = System.getProperty("Write").equals("true");
 		long now = System.currentTimeMillis();
 		System.out.println("Starting event tracker---" + e.getName() + "---"
 				+ src.getCanonicalName());
 		SRC = src;
 		Output_File = e;
 		try {
-			if (!new File(Output_File.getParentFile().getPath()).exists()) {
-				new File(Output_File.getParentFile().getPath()).mkdir();
+			if (functional) {
+				if (!new File(Output_File.getParentFile().getPath()).exists()) {
+					new File(Output_File.getParentFile().getPath()).mkdir();
+				}
+				e.createNewFile();
+				Output = new PrintWriter(Output_File);
+				stampLenth = 26;
+				System.out.println("Done with no probelms");
+				Write("Time taken to init: "
+						+ (System.currentTimeMillis() - now) + "ms", 0);
+			} else {
+				System.out.println("Logging not enabled---" + e.getName()
+						+ "---" + src.getCanonicalName());
 			}
-			e.createNewFile();
-			Output = new PrintWriter(Output_File);
-			stampLenth = 26;
-			System.out.println("Done with no probelms");
-			Write("Time taken to init: " + (System.currentTimeMillis() - now)
-					+ "ms", 0);
 		} catch (Exception e2) {
 			System.out.println(e2.getMessage());
 		}
@@ -57,7 +65,8 @@ public class EventTracker {
 	}
 
 	public void Write(Exception e) {
-		e.printStackTrace(Output);
+		if (functional)
+			e.printStackTrace(Output);
 	}
 
 	public void newParagraph() {
@@ -79,15 +88,18 @@ public class EventTracker {
 	}
 
 	public void Write(String S, int degree) {
-		String OutputTime = new Time(new Date().getTime()).toString();
-		String Outputs;
-		Outputs = "[" + OutputTime + "]" + "[" + SRC.getCanonicalName() + "]"
-				+ Types[degree] + " : ";
-		Outputs += Formating.Strings.space("", stampLenth - Outputs.length(),
-				" ", false) + S;
+		if (functional) {
+			String OutputTime = new Time(new Date().getTime()).toString();
+			String Outputs;
+			Outputs = "[" + OutputTime + "]" + "[" + SRC.getCanonicalName()
+					+ "]" + Types[degree] + " : ";
+			Outputs += Formating.Strings.space("",
+					stampLenth - Outputs.length(), " ", false)
+					+ S;
 
-		Output.println(Outputs);
-		Output.flush();
+			Output.println(Outputs);
+			Output.flush();
+		}
 	}
 
 }

@@ -43,6 +43,8 @@ public class ByteConventions {
 			return ret;
 		}
 		
+		
+		
 		public static byte binStringToByte(String a) {
 			System.out.println("[FONTING][BINSTR>BYTE][INPUT] : " + a);
 			int s = 0;
@@ -130,6 +132,15 @@ public class ByteConventions {
 		}
 	}
 
+	public static byte[] flipArr(byte...ss){
+		byte[] ret = new byte[ss.length];
+		for(int x = 0;x<ss.length;x++){
+			ret[x] = ss[ss.length-x-1];
+		}
+		return ret;
+		
+	}
+	
 	public static String toBinaryString(byte... bytes) {
 		StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);
 		for (int i = 0; i < Byte.SIZE * bytes.length; i++)
