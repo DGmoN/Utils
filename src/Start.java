@@ -20,11 +20,17 @@ public class Start extends Thread {
 
 	public static void main(String args[]) {
 		File test = new File("output.html");
-		testPageDownload(test);
-		testPagePadding(test);
-		HtmlSection.generateFromFile(test);
+		//testPageDownload(test);
+		//testPagePadding(test);
+		testHTMLSectinos(test);
 	}
 
+	private static void testHTMLSectinos(File test){
+		HtmlSection ss = HtmlSection.generateFromFile(test);
+		System.out.println(ss.Tag +" : Tag");
+		System.out.println(ss.getSectionCount() + " : SectionCount");
+	}
+	
 	private static void testPagePadding(File result) {
 		PadHtml.padHtml(result);
 	}

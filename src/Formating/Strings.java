@@ -1,7 +1,9 @@
 package Formating;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -31,9 +33,14 @@ public class Strings {
 
 		public void loadFromFile(File ss) {
 			try {
-				Scanner s = new Scanner(ss);
-				while(true){
-					add(s.nextLine());
+				BufferedReader s = new BufferedReader(new FileReader(ss));
+				String read;
+				while (true) {
+					read = s.readLine();
+					if (read == null)
+						break;
+					add(read);
+					
 				}
 			} catch (Exception e) {
 			}
@@ -97,17 +104,22 @@ public class Strings {
 			lines = null;
 		}
 
-		public String nextLine() {
+		public String nextLine(boolean nextLn) {
 			if (index >= lines.length)
 				return "EOL";
 			if (index < lines.length) {
-				if (lines[index].endsWith("\n"))
-					return lines[index++];
-				else {
-					return lines[index++] + "\n";
-				}
+			
+					if (lines[index].endsWith("\n"))
+						return lines[index++];
+					else {
+						if (nextLn)
+							return lines[index++] + "\n";
+						else
+							return lines[index++];
+					}
+				
 			} else
-				return "EOF";
+				return "EOL";
 		}
 
 		public String[] getAllLines() {
