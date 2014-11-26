@@ -40,9 +40,36 @@ public class Strings {
 					if (read == null)
 						break;
 					add(read);
-					
+
 				}
 			} catch (Exception e) {
+			}
+		}
+
+		public void remove(String s) {
+			boolean rem = false;
+			int remCount = 0;
+			for (int x = 0; x < lines.length; x++) {
+				if (lines[x]!= null)
+					if (lines[x].equals(s)) {
+						lines[x] = null;
+						rem = true;
+						if(index>x){
+							index--;
+						}
+						break;
+					}
+			}
+
+			if (rem) {
+				String[] neW = new String[lines.length - 1];
+				int a = 0;
+				for (String q : lines) {
+					if (q != null) {
+						neW[a++] = q;
+					}
+				}
+				lines = neW;
 			}
 		}
 
@@ -108,16 +135,14 @@ public class Strings {
 			if (index >= lines.length)
 				return "EOL";
 			if (index < lines.length) {
-			
-					if (lines[index].endsWith("\n"))
+				if (lines[index].endsWith("\n"))
+					return lines[index++];
+				else {
+					if (nextLn)
+						return lines[index++] + "\n";
+					else
 						return lines[index++];
-					else {
-						if (nextLn)
-							return lines[index++] + "\n";
-						else
-							return lines[index++];
-					}
-				
+				}
 			} else
 				return "EOL";
 		}

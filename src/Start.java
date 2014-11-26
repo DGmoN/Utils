@@ -1,6 +1,7 @@
 import io.audio.AudioStuff;
 
 import java.io.File;
+import java.util.Random;
 
 import javax.sound.sampled.AudioInputStream;
 
@@ -18,25 +19,96 @@ public class Start extends Thread {
 	 * "00000000", "00000000"}
 	 */
 
-	public static void main(String args[]) {
-		File test = new File("output.html");
-		//testPageDownload(test);
-		//testPagePadding(test);
-		testHTMLSectinos(test);
+	private static class byteStack {
+		private byte[] Data = new byte[0];
+		int size = 0;
+
+		public byteStack(byte... e) {
+			if (e.length > Data.length) {
+				System.out.println("Added bytes : "
+						+ ByteConventions.bytesToHexes(e));
+				System.out.println("Stack size : " + size);
+				Data = e;
+				size = e.length - 1;
+			}
+		}
+
+		public void add(byte[] line) {
+			for (byte s : line) {
+				add(s);
+			}
+		}
+
+		public void add(byte e) { // add object to top of the stack, stack limit
+									// undefiend
+			byte[] NewData = new byte[++size];
+			for (int x = 0; x < size - 1; x++) {
+				NewData[x] = Data[x];
+			}
+			NewData[size - 1] = e;
+			Data = NewData;
+			System.out.println("Added byte : " + ByteConventions.byteToHex(e));
+			System.out.println("Stack size : " + size);
+		}
+
+		public byte get() {
+			byte ret;
+			byte[] NewData = new byte[--size];
+			for (int x = 0; x < size; x++) {
+				NewData[x] = Data[x];
+			}
+			ret = Data[size];
+			Data = NewData;
+			System.out.println("Removed byte : "
+					+ ByteConventions.byteToHex(ret));
+			System.out.println("Stack size : " + size);
+			return ret;
+		}
+
+		public byte[] clear() {
+			int startSize = size;
+			byte[] ret = new byte[size];
+			for (int x = 0; x < startSize; x++) {
+				ret[x] = get();
+			}
+			return ret;
+		}
+
+		public void filp() {
+			Data = ByteConventions.flipArr(Data);
+		}
+
+		public boolean empty() {
+			return size == 0;
+		}
 	}
 
-	private static void testHTMLSectinos(File test){
-		HtmlSection ss = HtmlSection.generateFromFile(test);
-		System.out.println(ss.Tag +" : Tag");
-		System.out.println(ss.getSectionCount() + " : SectionCount");
+	public static void main(String args[]) {
+		byte[] test = new byte[16];
+		Random ran = new Random(System.currentTimeMillis());
+		ran.nextBytes(test);
+		byteStack temp = new byteStack();
+		temp.add(test);
+		temp.filp();
+		System.out.println(ByteConventions.bytesToHexes(temp.clear()));
+		System.out.println(ByteConventions.bytesToHexes(test));
+
+		// File test = new File("output.html");
+		// testPageDownload(test);
+		// testPagePadding(test);
+		// testHTMLSectinos(test);
 	}
-	
+
+	private static void testHTMLSectinos(File test) {
+		HtmlSection ss = HtmlSection.generateFromFile(test);
+	}
+
 	private static void testPagePadding(File result) {
 		PadHtml.padHtml(result);
 	}
-	
+
 	private static void testPageDownload(File result) {
-		HtmlUtils.DownloadHtml("http://google.co.za", result);
+		HtmlUtils.DownloadHtml("http://www.wikipedia.org/", result);
 	}
 
 	private static void testFontSaving() {
@@ -251,7 +323,7 @@ public class Start extends Thread {
 	private static void testFontLoading() {
 
 		Syms test = Fonting.LoadFont("Basic");
-		
+
 	}
 
 	private static void testAudio() {

@@ -48,6 +48,10 @@ public class HtmlSection {
 			Data = NewData;
 		}
 
+		public HtmlSection[] getSections() { // does not change the array
+			return Data;
+		}
+
 		public HtmlSection get() {
 			HtmlSection ret;
 			HtmlSection[] NewData = new HtmlSection[--size];
@@ -82,15 +86,19 @@ public class HtmlSection {
 		HtmlSection Subsection = null;
 		String temp, tag;
 		Scanner scan;
+		boolean removeLn = false;
 		while ((temp = Lines.nextLine(false)) != "EOL") {
 			scan = new Scanner(temp);
-			
+			try {
+				temp = scan.next();
+			} catch (Exception e) {
+
+			}
+
 			if (open) {
 				Subsection.Lines.add(temp);
 			}
-			
-			if (scan.hasNext())
-				temp = scan.next();
+
 			if (!temp.startsWith("<!")) {
 				tag = getTag(temp);
 				if (temp.startsWith("</")) {
@@ -104,7 +112,7 @@ public class HtmlSection {
 						}
 					}
 				} else {
-					if (temp.contains("<")) {
+					if (temp.contains("<") && !temp.contains("/")) {
 						if (!open) {
 							open = true;
 							Subsection = new HtmlSection(tag);
@@ -116,6 +124,8 @@ public class HtmlSection {
 			} else {
 				Comments.add(temp);
 			}
+
+			Lines.remove(temp);
 		}
 	}
 
@@ -132,16 +142,62 @@ public class HtmlSection {
 			} else if (d == '>' || d == ' ') {
 				break;
 			}
-			if (open && !(d == '>' || d == ' ' || d == '<'||d=='/'))
+			if (open && !(d == '>' || d == ' ' || d == '<' || d == '/'))
 				ret += d;
 		}
 		return ret;
+	}
+
+	public void printTree(int x) {
+		int a = x + 1;
+		for (HtmlSection ss : Subsections.getSections()) {
+			System.out.println(Strings.genSeparator(x, ' ') + ss.Tag);
+			ss.printTree(a);
+		}
+	}
+
+	public void fin() {
+		System.out.println("Finilizing :: " + Tag);
+		int x;
+		for (x = 0; x < tags_Closing.length; x++) {
+			if (tags_nClosing[x].equals(Tag)) {
+				break;
+			}
+		}
+		switch (x) {
+		case 0: // Defines a hyperlink
+			System.out.println(Tag + " : is a hyperlink");
+			break;
+		case 1: // Defines an abbreviation
+			System.out.println(Tag + " : is an abreviation");
+			break;
+		case 2: // Not supported in HTML5.
+				// Defines an acronym
+			System.out.println(Tag + " : is an acronym");
+			break;	
+		case 3: // Defines contact information for the author/owner of a document
+			System.out.println(Tag + " : is an address");
+			break;
+		case 4: // Not supported in HTML5.
+				// Defines an embedded applet
+			System.out.println(Tag + " : is an applent decleration");
+			break;
+		case 5: // Defines an area inside an image-map
+			System.out.println(Tag + " : is an image-map area decleration");
+			break;
+		}
+		
+
+		for (HtmlSection s : Subsections.getSections()) {
+			s.fin();
+		}
 	}
 
 	public static HtmlSection generateFromFile(File src) {
 		HtmlSection ret = new HtmlSection();
 		ret.Lines.loadFromFile(src);
 		ret.lasso();
+		ret.fin();
 		return ret;
 	}
 }
