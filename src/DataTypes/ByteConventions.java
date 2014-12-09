@@ -32,19 +32,10 @@ public class ByteConventions {
 			updateValue();
 		}
 
-		public byte[] getValueFromOffset(int x){
-			byte[] ret = new byte[size-x];
-			int q = 0;
-			for(int s = 0; s<size;s++){
-				if(s>x){
-					ret[q++] = Value[q];
-				}
-			}
-			return ret;
+		public byte[] getValueFromOffset(int x) {
+			return Value;
 		}
-		
-		
-		
+
 		public static byte binStringToByte(String a) {
 			System.out.println("[FONTING][BINSTR>BYTE][INPUT] : " + a);
 			int s = 0;
@@ -57,7 +48,7 @@ public class ByteConventions {
 			System.out.println("[FONTING][BINSTR>BYTE][RESULT] : " + s);
 			return (byte) s;
 		}
-		
+
 		public void invert() {
 			byte[] ret = new byte[Value.length];
 			int a = 0;
@@ -132,15 +123,15 @@ public class ByteConventions {
 		}
 	}
 
-	public static byte[] flipArr(byte...ss){
+	public static byte[] flipArr(byte... ss) {
 		byte[] ret = new byte[ss.length];
-		for(int x = 0;x<ss.length;x++){
-			ret[x] = ss[ss.length-x-1];
+		for (int x = 0; x < ss.length; x++) {
+			ret[x] = ss[ss.length - x - 1];
 		}
 		return ret;
-		
+
 	}
-	
+
 	public static String toBinaryString(byte... bytes) {
 		StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);
 		for (int i = 0; i < Byte.SIZE * bytes.length; i++)
@@ -210,7 +201,7 @@ public class ByteConventions {
 	public static double compare(byte[] a, byte[] b) {
 		int x = 0, mathch = 0;
 		for (byte s : a) {
-			if(a[x] == b[x])
+			if (a[x] == b[x])
 				mathch++;
 			x++;
 		}

@@ -17,7 +17,7 @@ import Formating.Strings.LINES;
 public abstract class Fonting {
 
 	private static final String DefultFontDir = "Fonts/";
-	
+
 	private static class Raster {
 		ByteBuffer bb;
 
@@ -129,10 +129,19 @@ public abstract class Fonting {
 			return new Rectangle(width, height);
 		}
 
+		public byte[] getForSymbol(byte s) {
+			for (Raster a : CharData) {
+				if (a.identifire == s) {
+					return a.getData();
+				}
+			}
+			return null;
+		}
+
 		private void registerChar(Raster a) {
 
 			System.out.println("[SYSMS][REGESTER][RASTER_SYMBOL] : "
-					+ a.identifire);
+					+ a.identifire + " char : " + (char) a.identifire);
 			System.out.println("[SYSMS][REGESTER][RASTER_DATA] : "
 					+ ByteConventions.toBinaryString(a.getData()));
 
@@ -159,8 +168,9 @@ public abstract class Fonting {
 					new byte[] { 0x00, (byte) CharData.size(), 0x00,
 							(byte) width, 0x00, (byte) height });
 			for (Raster a : CharData) {
-				temp.WriteToFile((byte) 0x00);
 				temp.WriteToFile(a.identifire);
+			}
+			for (Raster a : CharData) {
 				byte[] WriteData = a.getData();
 				temp.WriteToFile(WriteData);
 			}
@@ -172,10 +182,7 @@ public abstract class Fonting {
 
 	}
 
-	private static boolean retry = false;
-	
 	public static Syms LoadFont(String FileName) {
-		File temp1 = new File(FileName);
 		try {
 			System.out.println("[FONTING][LOADFONT][LOADING] : " + FileName
 					+ ".syms");
@@ -183,26 +190,22 @@ public abstract class Fonting {
 			byteSegement[] CharData = SS.getCharData();
 			Syms ret = new Syms(SS.getCharDimentions().width,
 					SS.getCharDimentions().height);
+			byte[] chars = SS.getChars();
+			int x = 0;
 			for (byteSegement a : CharData) {
 				byte[] data = a.getValue();
 				Raster temp = new Raster(SS.getCharDimentions().width,
 						SS.getCharDimentions().height);
-				temp.identifire = data[1];
-				byte[] actualData = buildStructureDate(data);
-				temp.put(buildStructureDate(data));
+				temp.identifire = chars[x++];
+				temp.bb.put(data);
 				ret.registerChar(temp);
 			}
 			System.out.println("[FONTING][LOADFONT][LOADED] : " + FileName
 					+ ".syms");
 			return ret;
-		} catch (FileNotFoundException ee){
-			System.out.println("[FONTING][LOADFONT][LOADING_FNF] : "
-					+ FileName);
-			if(!retry){
-			System.out.println("[FONTING][LOADFONT][LOADING_FNF] : Looking in defult dir.");
-			LoadFont(DefultFontDir +temp1.getName());
-			retry = true;
-			}
+		} catch (FileNotFoundException ee) {
+			System.out
+					.println("[FONTING][LOADFONT][LOADING_FNF] : " + FileName);
 		} catch (Exception e) {
 			System.out.println("[FONTING][LOADFONT][LOADING_FAILURE] : "
 					+ FileName);
@@ -211,16 +214,6 @@ public abstract class Fonting {
 
 		return null;
 	}
-
-	private static byte[] buildStructureDate(byte[] src) {
-		byte[] ret = new byte[src.length - 2];
-		for (int x = 0; x < src.length; x++) {
-			if (x > 2)
-				ret[x - 2] = src[x];
-		}
-		return ret;
-	}
-
 	public static String[] getCreatedFonts(String dir) {
 		File Dir = new File(dir);
 		Strings.LINES Ret = new LINES();

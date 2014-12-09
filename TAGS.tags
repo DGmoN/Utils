@@ -1,0 +1,134 @@
+#a~Defines a hyperlink|false
+!charset~Not supported in HTML5. Specifies the character-set of a linked document
+!coords~Not supported in HTML5. Specifies the coordinates of a link
+!download~Specifies that the target will be downloaded when a user clicks on the hyperlink
+!href~Specifies the URL of the page the link goes to
+!hreflang~Specifies the language of the linked document
+!media~Specifies what media/device the linked document is optimized for
+!name~Not supported in HTML5. Use the global id attribute instead. Specifies the name of an anchor
+!rel~Specifies the relationship between the current document and the linked document
+!rev~Not supported in HTML5. Specifies the relationship between the linked document and the current document
+!shape~Not supported in HTML5. Specifies the shape of a link
+!target~Specifies where to open the linked document
+!type~Specifies the media type of the linked document
+#abbr~Defines an abbreviation|false
+#acronym~Not supported in HTML5. Use <abbr> instead. Defines an acronym|false
+#address~Defines contact information for the author/owner of a document|false
+#applet~Not supported in HTML5. Use <object> instead. Defines an embedded applet|false
+#area~Defines an area inside an image-map|true
+#article~Defines an article|false
+#aside~Defines content aside from the page content|false
+#audio~Defines sound content|false
+#b~Defines bold text|false
+#base~Specifies the base URL/target for all relative URLs in a document|true
+#basefont~Not supported in HTML5. Use CSS instead. Specifies a default color, size, and font for all text in a document|false
+#bdi~Isolates a part of text that might be formatted in a different direction from other text outside it|false
+#bdo~Overrides the current text direction|false
+#big~Not supported in HTML5. Use CSS instead. Defines big text|false
+#blockquote~Defines a section that is quoted from another source|false
+#body~Defines the document's body|false
+#br~Defines a single line break|true
+#button~Defines a clickable button|false
+#canvas~Used to draw graphics, on the fly, via scripting (usually JavaScript)|false
+#caption~Defines a table caption|false
+#center~Not supported in HTML5. Use CSS instead. Defines centered text|false
+#cite~Defines the title of a work|false
+#code~Defines a piece of computer code|false
+#col~Specifies column properties for each column within a <colgroup> element|true
+#colGroup~Specifies a group of one or more columns in a table for formatting|false
+#datalist~Specifies a list of pre-defined options for input controls|false
+#dd~Defines a description/value of a term in a description list|false
+#del~Defines text that has been deleted from a document|false
+#details~Defines additional details that the user can view or hide|false
+#dfn~Represents the defining instance of a term|false
+#dialog~Defines a dialog box or window|false
+#dir~Not supported in HTML5. Use <ul> instead. Defines a directory list|false
+#div~Defines a section in a document|false
+#dl~Defines a description list|false
+#dt~Defines a term/name in a description list|false
+#em~Defines emphasized text|false
+#embed~Defines a container for an external (non-HTML) application|true
+#fieldset~Groups related elements in a form|false
+#figcaption~Defines a caption for a <figure> element|false
+#figure~Specifies self-contained content|false
+#font~Not supported in HTML5. Use CSS instead. Defines font, color, and size for text|false
+#footer~Defines a footer for a document or section|false
+#form~Defines an HTML form for user input|false
+#frame~Not supported in HTML5. Defines a window (a frame) in a frameset|false
+#frameset~Not supported in HTML5. Defines a set of frames|false
+#h1~Defines HTML heading|false
+#h2~Defines HTML heading|false
+#h3~Defines HTML heading|false
+#h4~Defines HTML heading|false
+#h5~Defines HTML heading|false
+#h6~Defines HTML heading|false
+#head~Defines information about the document|false
+#header~Defines a header for a document or section|false
+#hgroup~Defines a group of headings|false
+#hr~Defines a thematic change in the content|true
+#html~Defines the root of an HTML document|false
+#i~Defines a part of text in an alternate voice or mood|false
+#iframe~Defines an inline frame|false
+#img~Defines an image|true
+#input~Defines an input control|true
+#ins~Defines a text that has been inserted into a document|false
+#kbd~Defines keyboard input|false
+#keygen~Defines a key-pair generator field (for forms)|true
+#lable~Defines a label for an <input> element|false
+#legend~Defines a caption for a <fieldset> element|false
+#li~Defines a list item|false
+#main~Specifies the main content of a document|false
+#link~Defines the relationship between a document and an external resource (most used to link to style sheets)|true
+#map~Defines a client-side image-map|false
+#mark~Defines marked/highlighted text|false
+#menu~Defines a list/menu of commands|false
+#menuitem~Defines a command/menu item that the user can invoke from a popup menu|false
+#meta~Defines metadata about an HTML document|true
+#meter~Defines a scalar measurement within a known range (a gauge)|false
+#nav~Defines navigation links|false
+#noframes~Not supported in HTML5. Defines an alternate content for users that do not support frames|false
+#noscript~Defines an alternate content for users that do not support client-side scripts|false
+#object~Defines an embedded object|false
+#ol~Defines an ordered list|false
+#optgroup~Defines a group of related options in a drop-down list|false
+#option~Defines an option in a drop-down list|false
+#output~Defines the result of a calculation|false
+#p~Defines a paragraph|false
+#param~Defines a parameter for an object|true
+#pre~Defines preformatted text|false
+#progress~Represents the progress of a task|false
+#q~Defines a short quotation|false
+#rp~Defines what to show in browsers that do not support ruby annotations|false
+#rt~Defines an explanation/pronunciation of characters (for East Asian typography)|false
+#ruby~Defines a ruby annotation (for East Asian typography)|false
+#s~Defines text that is no longer correct|false
+#samp~Defines sample output from a computer program|false
+#script~Defines a client-side script|false
+#section~Defines a section in a document|false
+#select~Defines a drop-down list|false
+#small~Defines smaller text|false
+#source~Defines multiple media resources for media elements (<video> and <audio>)|true
+#span~Defines a section in a document|false
+#strike~Not supported in HTML5. Use <del> instead. Defines strikethrough text|false
+#strong~Defines important text|false
+#style~Defines style information for a document|false
+#sup~Defines subscripted text|false
+#summary~Defines a visible heading for a <details> element|false
+#sup~Defines superscripted text|false
+#table~Defines a table|false
+#tbody~Groups the body content in a table|false
+#td~Defines a cell in a table|false
+#textarea~Defines a multiline input control (text area)|false
+#tfoot~Groups the footer content in a table|false
+#th~Defines a header cell in a table|false
+#thread~Groups the header content in a table|false
+#time~Defines a date/time|false
+#title~Defines a title for the document|false
+#tr~Defines a row in a table|false
+#track~Defines text tracks for media elements (<video> and <audio>)|true
+#tt~Not supported in HTML5. Use CSS instead. Defines teletype text|false
+#u~Defines text that should be stylistically different from normal text|false
+#ul~Defines an unordered list|false
+#var~Defines a variable|false
+#video~Defines a video or movie|false
+#wbr~Defines a possible line-break|true

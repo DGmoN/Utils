@@ -1,35 +1,15 @@
 package web;
 
 import java.io.File;
-import java.util.Scanner;
 
+import web.TAGHelper.HTMLTag;
 import Formating.Strings;
 import Formating.Strings.LINES;
 
 public class HtmlSection {
 
-	private static final String[] tags_nClosing = new String[] { "a", "abbr",
-			"acronym", "address", "applet", "article", "aside", "audio", "b",
-			"basefont", "dbi", "dbo", "big", "blockquote", "body", "button",
-			"canvas", "caption", "center", "cite", "code", "colGroup",
-			"datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div",
-			"dl", "dt", "em", "fieldset", "figcaption", "figure", "font",
-			"footer", "form", "frame", "frameset", "h1", "h2", "h3", "h4",
-			"h5", "h6", "head", "header", "hgroup", "html", "i", "iframe",
-			"ins", "kbd", "keygen", "lable", "legend", "li", "main", "map",
-			"mark", "menu", "menuitem", "meter", "nav", "noframes", "noscript",
-			"object", "ol", "optgroup", "option", "output", "p", "pre",
-			"progress", "q", "rp", "rt", "ruby", "s", "samp", "script",
-			"section", "select", "small", "source", "span", "strike", "strong",
-			"style", "sup", "summary", "table", "tbody", "textarea", "tfoot",
-			"th", "thread", "time", "title", "tr", "track", "tt", "u", "ul",
-			"var", "video", "wbr" };
-	private static final String[] tags_Closing = new String[] { "br", "hr",
-			"meta", "link", "base", "img", "embed", "param", "area", "col",
-			"input" };
-
 	Strings.LINES Lines;
-
+	Strings.LINES DATA = new LINES();
 	Strings.LINES Comments;
 
 	private class SectionStack {
@@ -65,128 +45,136 @@ public class HtmlSection {
 
 	}
 
-	public String Tag;
+	public String TagLine;
+	HTMLTag tag;
 
 	SectionStack Subsections = new SectionStack();
 
 	public HtmlSection(String tag) {
-		Tag = tag;
+		TagLine = tag;
 		Lines = new LINES();
 		Comments = new LINES();
 	}
 
 	private HtmlSection() {
-		Tag = "Main";
+		TagLine = "<Main>";
 		Lines = new LINES();
 		Comments = new LINES();
 	}
 
 	public void lasso() {
-		boolean open = false;
+		boolean open = false, read = false;
 		HtmlSection Subsection = null;
-		String temp, tag;
-		Scanner scan;
-		boolean removeLn = false;
+		String temp;
+		int layer = 0;
+		System.out.println("Reading layer : " + TagLine);
 		while ((temp = Lines.nextLine(false)) != "EOL") {
-			scan = new Scanner(temp);
-			try {
-				temp = scan.next();
-			} catch (Exception e) {
-
-			}
-
-			if (open) {
-				Subsection.Lines.add(temp);
-			}
-
-			if (!temp.startsWith("<!")) {
-				tag = getTag(temp);
-				if (temp.startsWith("</")) {
+			int x = 0;
+			tag = getTag(temp);
+			if (tag != null) {
+				if (!temp.contains("!")) {
 					if (open) {
-						if (tag.equals(Subsection.Tag)) {
-							open = false;
-							System.out.println("Closing : " + Tag + " : "
-									+ Subsection.Tag);
-							Subsection.lasso();
-							Subsections.add(Subsection);
-						}
+						Subsection.Lines.add(temp);
 					}
-				} else {
-					if (temp.contains("<") && !temp.contains("/")) {
-						if (!open) {
-							open = true;
-							Subsection = new HtmlSection(tag);
-							System.out.println("Starting new section : " + Tag
-									+ " : " + Subsection.Tag);
-						}
-					}
-				}
-			} else {
-				Comments.add(temp);
-			}
+					if (!temp.contains("/")) {
 
-			Lines.remove(temp);
+						if (!temp.contains("<"))
+							DATA.add(temp);
+
+						if (Subsection == null) {
+							open = true;
+							System.out.println("OOPENIG : " + tag.getTag());
+							Subsection = new HtmlSection(temp);
+						}
+						if (!tag.selfClosing)
+							layer++;
+						else {
+							if (Subsection != null) {
+								open = false;
+								System.out
+										.println("CLOOSING : " + tag.getTag());
+								Subsections.add(Subsection);
+								Subsection = null;
+							}
+						}
+					} else {
+						layer--;
+						if (layer == 0) {
+							if (Subsection != null) {
+								open = false;
+								System.out
+										.println("CLOOSING : " + tag.getTag());
+								Subsections.add(Subsection);
+								Subsection = null;
+							}
+						}
+					}
+
+				}
+				Lines.remove(temp);
+			} else {
+				if (Subsection != null) {
+					Subsection.DATA.add(temp);
+				}
+				if (temp.startsWith("<!"))
+					Comments.add(temp);
+				else {
+					DATA.add(temp);
+					System.err.println("Line: " + temp + " has no tag");
+				}
+			}
 		}
+		for (HtmlSection s : Subsections.Data) {
+			s.lasso();
+		}
+	}
+
+	public String[] getLines() {
+		return DATA.getAllLines();
 	}
 
 	public int getSectionCount() {
 		return Subsections.size;
 	}
 
-	public String getTag(String s) {
+	public HTMLTag getTag(String s) {
+		boolean reading = false;
 		String ret = "";
-		boolean open = false;
 		for (char d : s.toCharArray()) {
+
 			if (d == '<') {
-				open = true;
-			} else if (d == '>' || d == ' ') {
-				break;
+				reading = true;
 			}
-			if (open && !(d == '>' || d == ' ' || d == '<' || d == '/'))
-				ret += d;
+
+			if (reading) {
+				if ((d != '<' || d != '>'))
+					ret += d;
+			}
+
+			if (d == '>') {
+				reading = false;
+				return TAGHelper.getTag(ret);
+			}
+
 		}
-		return ret;
+		return null;
 	}
 
 	public void printTree(int x) {
 		int a = x + 1;
 		for (HtmlSection ss : Subsections.getSections()) {
-			System.out.println(Strings.genSeparator(x, ' ') + ss.Tag);
-			ss.printTree(a);
+			System.out.println(Strings.genSeparator(x, ' ') + ss.TagLine);
+			for (String s : ss.getLines()) {
+				System.out.println(Strings.genSeparator(x, ' ') + s);
+			}
+
+			System.out.println(Strings.genSeparator(x, ' ') + ss.TagLine);
 		}
 	}
 
 	public void fin() {
-		System.out.println("Finilizing :: " + Tag);
-		int x;
-		for (x = 0; x < tags_Closing.length; x++) {
-			if (tags_nClosing[x].equals(Tag)) {
-				break;
-			}
-		}
-		switch (x) {
-		case 0: // Defines a hyperlink
-			System.out.println(Tag + " : is a hyperlink");
-			break;
-		case 1: // Defines an abbreviation
-			System.out.println(Tag + " : is an abreviation");
-			break;
-		case 2: // Not supported in HTML5.
-				// Defines an acronym
-			System.out.println(Tag + " : is an acronym");
-			break;	
-		case 3: // Defines contact information for the author/owner of a document
-			System.out.println(Tag + " : is an address");
-			break;
-		case 4: // Not supported in HTML5.
-				// Defines an embedded applet
-			System.out.println(Tag + " : is an applent decleration");
-			break;
-		case 5: // Defines an area inside an image-map
-			System.out.println(Tag + " : is an image-map area decleration");
-			break;
-		}
-		
+		System.out.println("Finilizing :: " + TagLine + "\t");
+		boolean found = false;
 
 		for (HtmlSection s : Subsections.getSections()) {
 			s.fin();

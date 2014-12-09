@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import DataTypes.ByteConventions;
@@ -59,4 +60,22 @@ public abstract class CustomFiles extends File {
 		FileHeader = new byteSegement(HEADEROFSET, HEADERSIZE, FileData);
 	}
 
+	public CustomFiles(File trgt, int HeaderSise, int headerOffset)
+			throws Exception {
+		super(trgt.getAbsolutePath());
+		HEADERSIZE = HeaderSise;
+		InputStream READSTR = new URL("file:////" + getAbsolutePath())
+				.openStream();
+		FileData = new byte[(int) this.length()];
+		HEADEROFSET = headerOffset;
+		System.out.println("[CUSTOMFILES][CONSTRUCTOR#3][BYTESREAD] : "
+				+ READSTR.read(FileData));
+		FileHeader = new byteSegement(HEADEROFSET, HEADERSIZE, FileData);
+	}
+
+	public CustomFiles(URL s, int i, int j) throws URISyntaxException {
+		super(s.toURI());
+		HEADERSIZE = i;
+		HEADEROFSET = j;
+	}
 }

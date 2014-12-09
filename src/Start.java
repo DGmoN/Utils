@@ -5,6 +5,7 @@ import java.util.Random;
 
 import javax.sound.sampled.AudioInputStream;
 
+import crypto.Encryption;
 import web.HtmlSection;
 import web.HtmlUtils;
 import web.PadHtml;
@@ -19,88 +20,31 @@ public class Start extends Thread {
 	 * "00000000", "00000000"}
 	 */
 
-	private static class byteStack {
-		private byte[] Data = new byte[0];
-		int size = 0;
-
-		public byteStack(byte... e) {
-			if (e.length > Data.length) {
-				System.out.println("Added bytes : "
-						+ ByteConventions.bytesToHexes(e));
-				System.out.println("Stack size : " + size);
-				Data = e;
-				size = e.length - 1;
-			}
-		}
-
-		public void add(byte[] line) {
-			for (byte s : line) {
-				add(s);
-			}
-		}
-
-		public void add(byte e) { // add object to top of the stack, stack limit
-									// undefiend
-			byte[] NewData = new byte[++size];
-			for (int x = 0; x < size - 1; x++) {
-				NewData[x] = Data[x];
-			}
-			NewData[size - 1] = e;
-			Data = NewData;
-			System.out.println("Added byte : " + ByteConventions.byteToHex(e));
-			System.out.println("Stack size : " + size);
-		}
-
-		public byte get() {
-			byte ret;
-			byte[] NewData = new byte[--size];
-			for (int x = 0; x < size; x++) {
-				NewData[x] = Data[x];
-			}
-			ret = Data[size];
-			Data = NewData;
-			System.out.println("Removed byte : "
-					+ ByteConventions.byteToHex(ret));
-			System.out.println("Stack size : " + size);
-			return ret;
-		}
-
-		public byte[] clear() {
-			int startSize = size;
-			byte[] ret = new byte[size];
-			for (int x = 0; x < startSize; x++) {
-				ret[x] = get();
-			}
-			return ret;
-		}
-
-		public void filp() {
-			Data = ByteConventions.flipArr(Data);
-		}
-
-		public boolean empty() {
-			return size == 0;
-		}
-	}
-
 	public static void main(String args[]) {
-		byte[] test = new byte[16];
-		Random ran = new Random(System.currentTimeMillis());
-		ran.nextBytes(test);
-		byteStack temp = new byteStack();
-		temp.add(test);
-		temp.filp();
-		System.out.println(ByteConventions.bytesToHexes(temp.clear()));
-		System.out.println(ByteConventions.bytesToHexes(test));
+		// byte[] test = new byte[255], test2 = new byte[255];
+		// Random ran = new Random(System.currentTimeMillis());
+		// ran.nextBytes(test);
 
-		// File test = new File("output.html");
+		// byte[] key = Encryption.genPGPSessionKey();
+		// System.out.println(ByteConventions.bytesToHexes(test2 =
+		// Encryption.incrypt(key,
+		// test)));
+		// System.out.println(ByteConventions.bytesToHexes(Encryption.decrypt(key,
+		// test2)));
+
+		// File test = new File("test.html");
 		// testPageDownload(test);
 		// testPagePadding(test);
 		// testHTMLSectinos(test);
+
+		testFontSaving();
+		testFontLoading();
+
 	}
 
 	private static void testHTMLSectinos(File test) {
 		HtmlSection ss = HtmlSection.generateFromFile(test);
+		ss.printTree(0);
 	}
 
 	private static void testPagePadding(File result) {
@@ -108,7 +52,7 @@ public class Start extends Thread {
 	}
 
 	private static void testPageDownload(File result) {
-		HtmlUtils.DownloadHtml("http://www.wikipedia.org/", result);
+		HtmlUtils.DownloadHtml("http://www.google.com/", result);
 	}
 
 	private static void testFontSaving() {
@@ -300,22 +244,14 @@ public class Start extends Thread {
 						"00110000", "01100000", "11111111" },
 
 				{ "00000000", "00000000", "00000000", "11111111", "00000011",
-						"00001100", "00110000", "11111111" } };
+						"00001100", "00110000", "11111111" },
 
-		Fonting.Syms tt = Fonting.createNewFont(8, 8, chars, new byte[] {
-				(byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4',
-				(byte) '5', (byte) '6', (byte) '7', (byte) '8', (byte) '9',
-				(byte) 'A', (byte) 'a', (byte) 'B', (byte) 'b', (byte) 'C',
-				(byte) 'c', (byte) 'D', (byte) 'd', (byte) 'E', (byte) 'e',
-				(byte) 'F', (byte) 'f', (byte) 'G', (byte) 'g', (byte) 'H',
-				(byte) 'h', (byte) 'I', (byte) 'i', (byte) 'J', (byte) 'j',
-				(byte) 'K', (byte) 'k', (byte) 'L', (byte) 'l', (byte) 'M',
-				(byte) 'm', (byte) 'N', (byte) 'n', (byte) 'O', (byte) 'o',
-				(byte) 'P', (byte) 'p', (byte) 'Q', (byte) 'q', (byte) 'R',
-				(byte) 'r', (byte) 'S', (byte) 's', (byte) 'T', (byte) 't',
-				(byte) 'U', (byte) 'u', (byte) 'V', (byte) 'v', (byte) 'W',
-				(byte) 'w', (byte) 'X', (byte) 'x', (byte) 'Y', (byte) 'y',
-				(byte) 'Z', (byte) 'z' });
+				{ "00000000", "00000000", "00000000", "00000000", "00000000",
+						"00000000", "00000000", "00000000" } };
+
+		Fonting.Syms tt = Fonting.createNewFont(8, 8, chars,
+				"0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz "
+						.getBytes());
 		tt.save("Basic");
 
 	}

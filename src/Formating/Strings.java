@@ -8,7 +8,68 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
+import DataTypes.ByteConventions;
+
 public class Strings {
+
+	private class StringStack {
+		private String[] Data = new String[0];
+		int size = 0;
+
+		public StringStack(String... e) {
+			if (e.length > Data.length) {
+				Data = e;
+				size = e.length - 1;
+
+			}
+		}
+
+		public void add(String[] line) {
+			for (String s : line) {
+				add(s);
+			}
+		}
+
+		public void add(String e) { // add object to top of the stack, stack
+									// limit
+									// undefiend
+			String[] NewData = new String[++size];
+			for (int x = 0; x < size - 1; x++) {
+				NewData[x] = Data[x];
+			}
+			NewData[size - 1] = e;
+			Data = NewData;
+
+		}
+
+		// abcdefghijklmnopqrstuvwxyz
+		public String get() {
+			String ret;
+			String[] NewData = new String[--size];
+			for (int x = 0; x < size; x++) {
+				NewData[x] = Data[x];
+			}
+			ret = Data[size];
+			Data = NewData;
+
+			return ret;
+		}
+
+		public String[] clear() {
+			int startSize = size;
+			String[] ret = new String[size];
+			for (int x = 0; x < startSize; x++) {
+				ret[x] = get();
+			}
+			size = 0;
+			Data = new String[0];
+			return ret;
+		}
+
+		public boolean empty() {
+			return size == 0;
+		}
+	}
 
 	private static final char[] ALFABETICAL = { 'a', 'b', 'c', 'd', 'e', 'f',
 			'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
@@ -46,15 +107,31 @@ public class Strings {
 			}
 		}
 
+		public void replase(String s, String rep) {
+			boolean rem = false;
+			int remCount = 0;
+			for (int x = 0; x < lines.length; x++) {
+				if (lines[x] != null)
+					if (lines[x].equals(s)) {
+						lines[x] = rep;
+						if (index > x) {
+							index--;
+						}
+						break;
+					}
+			}
+
+		}
+
 		public void remove(String s) {
 			boolean rem = false;
 			int remCount = 0;
 			for (int x = 0; x < lines.length; x++) {
-				if (lines[x]!= null)
+				if (lines[x] != null)
 					if (lines[x].equals(s)) {
 						lines[x] = null;
 						rem = true;
-						if(index>x){
+						if (index > x) {
 							index--;
 						}
 						break;
@@ -148,15 +225,7 @@ public class Strings {
 		}
 
 		public String[] getAllLines() {
-			String[] out = new String[lines.length];
-			int x = 0;
-			for (String a : lines) {
-				if (a != null)
-					out[x++] = a;
-
-			}
-
-			return out;
+			return lines;
 		}
 
 	}
@@ -283,15 +352,22 @@ public class Strings {
 	// removes the char from the string
 	public static String remove(String trgt, char... cs) {
 		String ret = "";
-
 		for (char s : trgt.toCharArray()) {
-			for (char z : cs) {
-				if (s != z)
-					ret += s;
-			}
+			if (!StringContains(new String(cs), s))
+				ret += s;
 		}
 
 		return ret;
+	}
+
+	private static boolean StringContains(String s, char a) {
+		for (char g : s.toCharArray()) {
+			if (a == g) {
+				return true;
+			}
+		}
+		return false;
+
 	}
 
 	// returns the length of the longest string

@@ -24,54 +24,43 @@ public abstract class PadHtml {
 			in.close();
 			src.delete();
 			src.createNewFile();
+			boolean inQuotations = false;
 			out = new FileOutputStream(src);
 			for (byte ss : data) {
 				out.write(ss);
+					if (ss == '"' && !inPar)
+						inPar = true;
+					else if (ss == '"' && inPar) {
+						inPar = false;
+					}
+					if (!inPar) {
+						if (ss == '>') {
+							suposedToPad = true;
+						} else if (Value((byte) '<', index + 1)
+								&& Value((byte) '/', index + 2)) {
+							suposedToPad = true;
+							padLenth--;
+						}
+
+						if (ss == '<' && !Value((byte) '/', index + 1)) {
+							padLenth++;
+						}
+
+						if (suposedToPad) {
+							out.write((byte) 0x0a);
+							// out.write(pad((byte) 0x09, padLenth));
+							suposedToPad = false;
+						}
+
+					}
 				
-				if(ss=='"'&&!inPar)
-					inPar = true;
-				else if(ss=='"'&&inPar){
-					inPar = false;
-				}
-				
-				if (!inPar) {
-			
-					if(ss==';')
-						suposedToPad = true;
-					
-					if(ss=='{'){
-						padLenth++;
-						suposedToPad = true;
-					}
-					
-					if(ss=='}'){
-						padLenth--;
-					}
-					
-					if(ss=='>'){
-						suposedToPad = true;
-					}else if(Value((byte) '<', index+1)&&Value((byte) '/', index+2)){
-						suposedToPad = true;
-						padLenth--;
-					}
-					
-					if(ss=='<'&&!Value((byte) '/', index+1)){
-						padLenth++;
-					}
-					
-					if (suposedToPad) {
-						out.write((byte) 0x0a);
-						out.write(pad((byte) 0x09, padLenth));
-						suposedToPad = false;
-					}
-				}
 				index++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// tab = 0x09
 
 	private static byte[] pad(byte s, int with) {
